@@ -21,12 +21,18 @@ WHITE = (255, 255, 255)
 
 BGCOLOR = RED
 
+# Space count
+EASYX = 0
+EASYY = 0
+MEDX = 0
 
 # noinspection PyGlobalUndefined
 def main():
     global FPSCLOCK
     global DISPLAYSURF
     pygame.init()
+    pygame.mixer_music.load("Alcazar.mp3")
+    pygame.mixer_music.play(-1, 0.0)
 
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
