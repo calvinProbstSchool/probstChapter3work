@@ -13,7 +13,7 @@ FPS = 30
 BOARDWIDTH = 20
 BOARDHEIGHT = 20
 BOXSIZE = 30
-GAPSIZE = 1
+GAPSIZE = 5
 WINDOWWIDTH = BOXSIZE * BOARDWIDTH + GAPSIZE * (BOARDWIDTH + 1)
 WINDOWHEIGHT = BOXSIZE * BOARDHEIGHT + GAPSIZE * (BOARDHEIGHT + 1)
 EXPLOSIONSPEED = 10
@@ -32,7 +32,6 @@ BGCOLOR = RED
 
 def main():
     global DISPLAYSURF, FPSCLOCK
-    print("all vars init")
     pygame.init()
     pygame.mixer_music.load("Alcazar.mp3")
     pygame.mixer_music.play(-1, 0.0)
@@ -45,11 +44,13 @@ def main():
     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
     flags = [[False] * BOARDHEIGHT] * BOARDWIDTH
 
+    revealed = flags
+
 
     while True:
         mouseClicked = False
 
-        drawGameBoard()
+        drawGameBoard(revealed)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
@@ -81,7 +82,6 @@ def makeNewBoard(width, height):
         if not board[x][y]:
             board[x][y] = True
             bombsPlaced = bombsPlaced + 1
-            print(str(bombsPlaced))
     return board
 
 
@@ -97,12 +97,13 @@ def getBoxPos(x, y):
     return boxXPos, boxYPos
 
 
-def drawGameBoard():
+def drawGameBoard(board):
     for x in range(0, BOARDWIDTH):
         for y in range(0, BOARDHEIGHT):
             # Draw a rectangle for the box
             # fix with math
-            pygame.draw.rect(DISPLAYSURF, BLUE, pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE), 1)
+            if not board[x][y]:
+                pygame.draw.rect(DISPLAYSURF, BLUE, pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE))
             # if flagBoard[x][y]:
             # Replace with drawing actual flag at position
             # pygame.draw.polygon(DISPLAYSURF, RED, ((1, 0), (1, 1), (2, 2)))
