@@ -12,8 +12,8 @@ from pygame.locals import *
 FPS = 30
 BOARDWIDTH = 20
 BOARDHEIGHT = 20
-BOXSIZE = 20
-GAPSIZE = 3
+BOXSIZE = 30
+GAPSIZE = 1
 WINDOWWIDTH = BOXSIZE * BOARDWIDTH + GAPSIZE * (BOARDWIDTH + 1)
 WINDOWHEIGHT = BOXSIZE * BOARDHEIGHT + GAPSIZE * (BOARDHEIGHT + 1)
 EXPLOSIONSPEED = 10
@@ -28,21 +28,20 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 BGCOLOR = RED
-print("all vars init")
-pygame.init()
-pygame.mixer_music.load("Alcazar.mp3")
-pygame.mixer_music.play(-1, 0.0)
-print("1")
-FPSCLOCK = pygame.time.Clock()
-DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+
 
 def main():
-
+    global DISPLAYSURF, FPSCLOCK
+    print("all vars init")
+    pygame.init()
+    pygame.mixer_music.load("Alcazar.mp3")
+    pygame.mixer_music.play(-1, 0.0)
+    FPSCLOCK = pygame.time.Clock()
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     pygame.display.set_caption("Minesweeper")
 
     mousex = 0
     mousey = 0
-    print("2")
     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
     flags = [[False] * BOARDHEIGHT] * BOARDWIDTH
 
@@ -50,8 +49,9 @@ def main():
     while True:
         mouseClicked = False
 
-        drawGameBoard(flags)
-        print("2")
+        drawGameBoard()
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
@@ -64,18 +64,24 @@ def main():
 
         boxX, boxY = getBoxPos(mousex, mousey)
         if mouseClicked:
-            print("click" + str(boxX, boxY))
+            print("click" + str(boxX) + " " + str(boxY))
 
 
 def makeNewBoard(width, height):
-    board = [[False] * height] * width
+    board = []
+    for x in range(width):
+        column = []
+        for y in range(height):
+            column.append(False)
+        board.append(column)
     bombsPlaced = 0
     while bombsPlaced < BOMBCOUNT:
         x = random.randint(0, width - 1)
         y = random.randint(0, height - 1)
         if not board[x][y]:
             board[x][y] = True
-            bombsPlaced += 1
+            bombsPlaced = bombsPlaced + 1
+            print(str(bombsPlaced))
     return board
 
 
@@ -91,13 +97,12 @@ def getBoxPos(x, y):
     return boxXPos, boxYPos
 
 
-def drawGameBoard(flagBoard):
-    DISPLAYSURF.fill(BGCOLOR)
-    for x in range(BOARDWIDTH):
-        for y in range(BOARDHEIGHT):
+def drawGameBoard():
+    for x in range(0, BOARDWIDTH):
+        for y in range(0, BOARDHEIGHT):
             # Draw a rectangle for the box
             # fix with math
-            pygame.draw.rect(DISPLAYSURF, WHITE, ((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE))
+            pygame.draw.rect(DISPLAYSURF, BLUE, pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE), 1)
             # if flagBoard[x][y]:
             # Replace with drawing actual flag at position
             # pygame.draw.polygon(DISPLAYSURF, RED, ((1, 0), (1, 1), (2, 2)))
