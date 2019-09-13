@@ -46,11 +46,13 @@ def main():
 
     revealed = flags
 
+    gamePlaying = True
 
     while True:
         mouseClicked = False
 
-        drawGameBoard(revealed)
+        if gamePlaying:
+            drawGameBoard(revealed)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
@@ -64,17 +66,18 @@ def main():
                 mouseClicked = True
 
         boxX, boxY = getBoxPos(mousex, mousey)
-        if mouseClicked:
-            print("click" + str(boxX) + " " + str(boxY))
+        if mouseClicked and gamePlaying:
+            if not boxY == -1 and not boxX == -1:
+                if not revealed[boxX][boxY]:
+                    revealed[boxX][boxY] = True
+                    if gameBoard[boxX][boxY]:
+                        gameOver()
+                        gamePlaying = False
+                    else:
 
 
 def makeNewBoard(width, height):
-    board = []
-    for x in range(width):
-        column = []
-        for y in range(height):
-            column.append(False)
-        board.append(column)
+    board = [[False] * BOARDHEIGHT] * BOARDWIDTH
     bombsPlaced = 0
     while bombsPlaced < BOMBCOUNT:
         x = random.randint(0, width - 1)
@@ -95,6 +98,11 @@ def getBoxPos(x, y):
     if not boxYOverlap < BOXSIZE:
         boxYPos = -1
     return boxXPos, boxYPos
+
+def gameOver(board):
+    for x in range(0, BOARDWIDTH):
+        for y in range(0, BOARDHEIGHT):
+            if board[x][y]:
 
 
 def drawGameBoard(board):
