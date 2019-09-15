@@ -69,11 +69,11 @@ def main():
         if mouseClicked and gamePlaying:
             if not boxY == -1 and not boxX == -1:
                 if not revealed[boxX][boxY]:
-                    revealed[boxX][boxY] = True
                     if gameBoard[boxX][boxY]:
                         gameOver()
                         gamePlaying = False
                     else:
+                        revealBox(gameBoard, revealed, boxX, boxY)
 
 
 def makeNewBoard(width, height):
@@ -99,10 +99,58 @@ def getBoxPos(x, y):
         boxYPos = -1
     return boxXPos, boxYPos
 
+def revealBox(board,revealedBoxes, x, y):
+    if not revealedBoxes[x][y]:
+        # draw the revealed square
+        revealedBoxes[x][y] = True
+        bombsTouchingBox = getBombsNear(board, x, y)
+        # draw the font version of the number
+        if bombsTouchingBox = 0
+            xMin = x - 1
+            if xMin < 0:
+                xMin = 0
+            yMin = y - 1
+            if yMin < 0:
+                yMin = 0
+            xMax = x + 1
+            if xMax > BOARDWIDTH - 1:
+                xMax = x
+            yMax = y + 1
+            if yMax > BOARDWIDTH - 1:
+                yMax = y
+            for xTemp in range(xMin, xMax + 1):
+                for yTemp in range(yMin, yMax + 1):
+                    if not xTemp == x and not yTemp == y:
+                        revealedBoxes = revealBox(board, revealedBoxes, x, y)
+    return revealedBoxes
+    
+    
+def getBombsNear(board, x, y):
+    xMin = x - 1
+    if xMin < 0:
+        xMin = 0
+    yMin = y - 1
+    if yMin < 0:
+        yMin = 0
+    xMax = x + 1
+    if xMax > BOARDWIDTH - 1:
+        xMax = x
+    yMax = y + 1
+    if yMax > BOARDWIDTH - 1:
+        yMax = y
+    bombsTouching = 0
+    for xTemp in range(xMin, xMax + 1):
+        for yTemp in range(yMin, yMax + 1):
+            if board[xTemp][yTemp]:
+                bombsTouching = bombsTouching + 1
+    return bombsTouching
+            
+
 def gameOver(board):
     for x in range(0, BOARDWIDTH):
         for y in range(0, BOARDHEIGHT):
             if board[x][y]:
+                # draw the bombs exploded
 
 
 def drawGameBoard(board):
