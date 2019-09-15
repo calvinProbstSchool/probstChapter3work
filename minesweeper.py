@@ -73,8 +73,19 @@ def main():
                         gameOver()
                         gamePlaying = False
                     else:
-                        revealBox(gameBoard, revealed, boxX, boxY)
+                        revealed = revealBox(gameBoard, revealed, boxX, boxY)
+                        if gameWinCheck(gameBoard, revealed):
+                            # draw a flower or something
 
+                        
+def gameWinCheck(board, revealedBoxes):
+    gameWon = True
+    for x in range(0, BOARDWIDTH):
+        for y in range(0, BOARDWIDTH):
+            if board[x][y] == revealedBoxes[x][y]:
+                gameWon = False
+    return gameWon
+    
 
 def makeNewBoard(width, height):
     board = [[False] * BOARDHEIGHT] * BOARDWIDTH
@@ -99,6 +110,7 @@ def getBoxPos(x, y):
         boxYPos = -1
     return boxXPos, boxYPos
 
+
 def revealBox(board,revealedBoxes, x, y):
     if not revealedBoxes[x][y]:
         # draw the revealed square
@@ -119,7 +131,7 @@ def revealBox(board,revealedBoxes, x, y):
             if yMax > BOARDWIDTH - 1:
                 yMax = y
             for xTemp in range(xMin, xMax + 1):
-                for yTemp in range(yMin, yMax + 1):
+                for yTemp in range(yMin, yMax + 1):   
                     if not xTemp == x and not yTemp == y:
                         revealedBoxes = revealBox(board, revealedBoxes, x, y)
     return revealedBoxes
