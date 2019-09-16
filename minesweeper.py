@@ -6,7 +6,6 @@
 import random
 import pygame
 import sys
-import time
 from pygame.locals import *
 
 FPS = 30
@@ -41,18 +40,28 @@ def main():
 
     mousex = 0
     mousey = 0
+    print("1")
     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
-    flags = [[False] * BOARDHEIGHT] * BOARDWIDTH
+    print("thank god")
+    flags = []
+    for x in range(BOARDWIDTH):
+        column = []
+        for y in range(BOARDHEIGHT):
+            column.append(False)
+        flags.append(column)
 
-    revealed = flags
+    revealed = []
+    for x in range(BOARDWIDTH):
+        column = []
+        for y in range(BOARDHEIGHT):
+            column.append(False)
+        revealed.append(column)
 
     gamePlaying = True
-
     while True:
         mouseClicked = False
 
-        if gamePlaying:
-            drawGameBoard(revealed)
+        drawGameBoard(revealed)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
@@ -68,14 +77,16 @@ def main():
         boxX, boxY = getBoxPos(mousex, mousey)
         if mouseClicked and gamePlaying:
             if not boxY == -1 and not boxX == -1:
+                print("click at" + str(boxX) + " " + str(boxY))
                 if not revealed[boxX][boxY]:
                     if gameBoard[boxX][boxY]:
-                        gameOver()
+                        gameOver(gameBoard)
                         gamePlaying = False
                     else:
                         revealed = revealBox(gameBoard, revealed, boxX, boxY)
                         if gameWinCheck(gameBoard, revealed):
                             # draw a flower or something
+                            print("winna")
 
                         
 def gameWinCheck(board, revealedBoxes):
@@ -88,8 +99,15 @@ def gameWinCheck(board, revealedBoxes):
     
 
 def makeNewBoard(width, height):
-    board = [[False] * BOARDHEIGHT] * BOARDWIDTH
-    bombsPlaced = 0
+    board = []
+    for x in range(width):
+        column = []
+        for y in range(height):
+            column.append(False)
+        board.append(column)
+    bombsPlaced = 1
+    board[9][11] = True
+    print("starting while loop")
     while bombsPlaced < BOMBCOUNT:
         x = random.randint(0, width - 1)
         y = random.randint(0, height - 1)
@@ -108,16 +126,17 @@ def getBoxPos(x, y):
     boxYPos = (y - GAPSIZE - boxYOverlap) / (BOXSIZE + GAPSIZE)
     if not boxYOverlap < BOXSIZE:
         boxYPos = -1
-    return boxXPos, boxYPos
+    return int(boxXPos), int(boxYPos)
 
 
-def revealBox(board,revealedBoxes, x, y):
+def revealBox(board, revealedBoxes, x, y):
     if not revealedBoxes[x][y]:
+        print("revealing " + str(x) + ' ' + str(y))
         # draw the revealed square
         revealedBoxes[x][y] = True
         bombsTouchingBox = getBombsNear(board, x, y)
         # draw the font version of the number
-        if bombsTouchingBox = 0
+        if bombsTouchingBox == 0:
             xMin = x - 1
             if xMin < 0:
                 xMin = 0
@@ -163,6 +182,7 @@ def gameOver(board):
         for y in range(0, BOARDHEIGHT):
             if board[x][y]:
                 # draw the bombs exploded
+                print("bomb explodey at " + str(x) + " " + str(y))
 
 
 def drawGameBoard(board):
@@ -172,8 +192,13 @@ def drawGameBoard(board):
             # fix with math
             if not board[x][y]:
                 pygame.draw.rect(DISPLAYSURF, BLUE, pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE))
+            else:
+                pygame.draw.rect(DISPLAYSURF, GREEN,
+                                 pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y),
+                                             BOXSIZE, BOXSIZE))
             # if flagBoard[x][y]:
             # Replace with drawing actual flag at position
             # pygame.draw.polygon(DISPLAYSURF, RED, ((1, 0), (1, 1), (2, 2)))
+
 
 main()
