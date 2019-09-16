@@ -6,7 +6,8 @@
 import random
 import pygame
 import sys
-from pygame.locals import *
+
+# from pygame.locals import *
 
 FPS = 30
 BOARDWIDTH = 20
@@ -29,6 +30,7 @@ WHITE = (255, 255, 255)
 BGCOLOR = RED
 
 
+# noinspection PyGlobalUndefined
 def main():
     global DISPLAYSURF, FPSCLOCK
     pygame.init()
@@ -65,12 +67,12 @@ def main():
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+            if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            elif event.type == MOUSEMOTION:
+            elif event.type == pygame.MOUSEMOTION:
                 mousex, mousey = event.pos
-            elif event.type == MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 mousex, mousey = event.pos
                 mouseClicked = True
 
@@ -88,7 +90,7 @@ def main():
                             # draw a flower or something
                             print("winna")
 
-                        
+
 def gameWinCheck(board, revealedBoxes):
     gameWon = True
     for x in range(0, BOARDWIDTH):
@@ -96,7 +98,7 @@ def gameWinCheck(board, revealedBoxes):
             if board[x][y] == revealedBoxes[x][y]:
                 gameWon = False
     return gameWon
-    
+
 
 def makeNewBoard(width, height):
     board = []
@@ -150,12 +152,12 @@ def revealBox(board, revealedBoxes, x, y):
             if yMax > BOARDWIDTH - 1:
                 yMax = y
             for xTemp in range(xMin, xMax + 1):
-                for yTemp in range(yMin, yMax + 1):   
+                for yTemp in range(yMin, yMax + 1):
                     if not xTemp == x and not yTemp == y:
                         revealedBoxes = revealBox(board, revealedBoxes, x, y)
     return revealedBoxes
-    
-    
+
+
 def getBombsNear(board, x, y):
     xMin = x - 1
     if xMin < 0:
@@ -175,7 +177,7 @@ def getBombsNear(board, x, y):
             if board[xTemp][yTemp]:
                 bombsTouching = bombsTouching + 1
     return bombsTouching
-            
+
 
 def gameOver(board):
     for x in range(0, BOARDWIDTH):
@@ -191,11 +193,12 @@ def drawGameBoard(board):
             # Draw a rectangle for the box
             # fix with math
             if not board[x][y]:
-                pygame.draw.rect(DISPLAYSURF, BLUE, pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE))
+                pygame.draw.rect(DISPLAYSURF, BLUE, (
+                    (GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y), BOXSIZE, BOXSIZE))
             else:
                 pygame.draw.rect(DISPLAYSURF, GREEN,
-                                 pygame.Rect((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y),
-                                             BOXSIZE, BOXSIZE))
+                                 ((GAPSIZE + (GAPSIZE + BOXSIZE) * x), (GAPSIZE + (GAPSIZE + BOXSIZE) * y),
+                                  BOXSIZE, BOXSIZE))
             # if flagBoard[x][y]:
             # Replace with drawing actual flag at position
             # pygame.draw.polygon(DISPLAYSURF, RED, ((1, 0), (1, 1), (2, 2)))
