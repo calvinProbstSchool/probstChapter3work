@@ -91,7 +91,7 @@ def main():
                 print("first click at" + str(boxX) + " " + str(boxY))
                 firstBombCount = getBombsNear(gameBoard, boxX, boxY)
                 noBomb = False
-                while not firstBombCount == 0 and not noBomb:
+                while not firstBombCount == 0 or not noBomb:
                     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
                     firstBombCount = getBombsNear(gameBoard, boxX, boxY)
                     noBomb = not gameBoard[boxX][boxY]
