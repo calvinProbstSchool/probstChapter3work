@@ -90,9 +90,11 @@ def main():
             if not boxY == -1 and not boxX == -1:
                 print("first click at" + str(boxX) + " " + str(boxY))
                 firstBombCount = getBombsNear(gameBoard, boxX, boxY)
-                while not firstBombCount == 0:
+                noBomb = False
+                while not firstBombCount == 0 and not noBomb:
                     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
                     firstBombCount = getBombsNear(gameBoard, boxX, boxY)
+                    noBomb = not gameBoard[boxX][boxY]
                 firstClick = False
                 revealBox(gameBoard, revealed, boxX, boxY)
         elif leftClicked and gamePlaying:
