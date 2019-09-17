@@ -153,7 +153,7 @@ def gameWinCheck(board, revealedBoxes):
 
 
 def gameWinJoke():
-    jokeSurf = pygame.image.load("pizzaJoke.png")
+    jokeSurf = pygame.image.load("pizzaJokeJPG.jpg")
     DISPLAYSURF.blit(jokeSurf, (0, 0))
     pygame.display.update()
 
