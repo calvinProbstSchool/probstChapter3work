@@ -6,8 +6,7 @@
 import random
 import pygame
 import sys
-
-# from pygame.locals import *
+from pygame.locals import *
 
 FPS = 30
 BOARDWIDTH = 20
@@ -40,7 +39,7 @@ def main():
     pygame.mixer_music.play(-1, 0.0)
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    BOXFONT = pygame.font.Font('D:/users/User1/Documents/pythonSchool/textBookExamplesPygame/3Dventure.ttf', FONTSIZE)
+    BOXFONT = pygame.font.Font('./3Dventure.ttf', FONTSIZE)
     pygame.display.set_caption("Minesweeper")
 
     mousex = 0
@@ -71,12 +70,12 @@ def main():
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEMOTION:
+            elif event.type == MOUSEMOTION:
                 mousex, mousey = event.pos
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == MOUSEBUTTONUP:
                 buttonPressed = event.button
                 mousex, mousey = event.pos
                 if buttonPressed == 1:
@@ -112,7 +111,7 @@ def main():
                             gameWinJoke()
         elif rightClicked and gamePlaying:
             if not boxY == -1 and not boxX == -1:
-                if not revealed[boxX][boxY] or flags[boxX][boxY] :
+                if not revealed[boxX][boxY] or flags[boxX][boxY]:
                     flags[boxX][boxY] = not flags[boxX][boxY]
                     revealed[boxX][boxY] = not revealed[boxX][boxY]
                     if gameWinCheck(gameBoard, revealed):
@@ -148,7 +147,7 @@ def gameWinCheck(board, revealedBoxes):
     gameWon = True
     for x in range(0, BOARDWIDTH):
         for y in range(0, BOARDWIDTH):
-            if board[x][y] == revealedBoxes[x][y] and board[x][y] == False:
+            if board[x][y] == revealedBoxes[x][y] and not board[x][y]:
                 gameWon = False
     return gameWon
 
