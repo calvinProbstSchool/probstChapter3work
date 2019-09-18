@@ -91,10 +91,17 @@ def main():
                 print("first click at" + str(boxX) + " " + str(boxY))
                 firstBombCount = getBombsNear(gameBoard, boxX, boxY)
                 noBomb = False
-                while not firstBombCount == 0 or not noBomb:
+                trials = 0
+                while (not firstBombCount == 0 or not noBomb) and trials < 100:
                     gameBoard = makeNewBoard(BOARDWIDTH, BOARDHEIGHT)
                     firstBombCount = getBombsNear(gameBoard, boxX, boxY)
                     noBomb = not gameBoard[boxX][boxY]
+                    trials += 1
+                if not firstBombCount == 0 or not noBomb:
+                    while not firstBombCount == 0 or not noBomb:
+                        gameBoard = makeNewBoardNoJoke(BOARDWIDTH, BOARDHEIGHT)
+                        firstBombCount = getBombsNear(gameBoard, boxX, boxY)
+                        noBomb = not gameBoard[boxX][boxY]
                 firstClick = False
                 revealBox(gameBoard, revealed, boxX, boxY)
         elif leftClicked and gamePlaying:
@@ -169,6 +176,24 @@ def makeNewBoard(width, height):
         board.append(column)
     bombsPlaced = 1
     board[9][11] = True
+    print("starting while loop")
+    while bombsPlaced < BOMBCOUNT:
+        x = random.randint(0, width - 1)
+        y = random.randint(0, height - 1)
+        if not board[x][y]:
+            board[x][y] = True
+            bombsPlaced = bombsPlaced + 1
+    return board
+
+
+def makeNewBoardNoJoke(width, height):
+    board = []
+    for x in range(width):
+        column = []
+        for y in range(height):
+            column.append(False)
+        board.append(column)
+    bombsPlaced = 0
     print("starting while loop")
     while bombsPlaced < BOMBCOUNT:
         x = random.randint(0, width - 1)
